@@ -19,8 +19,8 @@ This repository contains scripts to **process and clean Reddit submissions and c
 
 1. **Clone the repository**
    ```sh
-   git clone https://github.com/yourusername/reddit-data-cleanup.git
-   cd reddit-data-cleanup
+   git clone https://github.com/VISHNUDAS-tunerlabs/Reddis-cleaner.git
+   cd Reddis-cleaner
    ```
 2. **Install dependencies**
    ```sh
