@@ -30,6 +30,7 @@ fs.readdir(dataInputFolder, (err, files) => {
         try {
           posts = JSON.parse(data);
         } catch (error) {
+          console.log("inputFilePath : ", inputFilePath);
           console.error("Error parsing JSON:", error);
           return;
         }
@@ -67,14 +68,23 @@ fs.readdir(dataInputFolder, (err, files) => {
             : post.title;
           return acc;
         }, {});
-
+        // console.log("combined Object : ", combinedObject);
         let comment = {};
         for (const [date, text] of Object.entries(combinedObject)) {
-          const linesArray = text.split("\n");
+          const cleanedText = text
+            .split("\n") // Split into lines
+            .map((line) => line.trim()) // Trim spaces from each line
+            .filter((line) => line !== "") // Remove empty lines
+            .join("\n"); // Join back with a single newline
+          const linesArray = cleanedText.split("\n");
           const utcTimestamp = Math.floor(new Date(date).getTime() / 1000);
-          comment.date = date;
-          comment.date_utc = utcTimestamp;
-          comment.comments = linesArray;
+          // Create a new submission object for each date
+          const comment = {
+            date: date,
+            date_utc: utcTimestamp,
+            submissions: linesArray,
+          };
+
           outputObj.push(comment);
         }
 

@@ -39,6 +39,7 @@ fs.readdir(dataInputFolder, (err, files) => {
             .toISOString()
             .split("T")[0], // Convert to YYYY-MM-DD format
         }));
+        // console.log("processedPosts : ", processedPosts);
         const cleanText = (text) => text.replace(/[^a-zA-Z\s]/g, "").trim();
 
         let submissionOutput = [];
@@ -51,9 +52,11 @@ fs.readdir(dataInputFolder, (err, files) => {
             : post.title;
           return acc;
         }, {});
-
-        let submissionObject = {};
+        // console.log("combinedObject : ", combinedObject);
+        // let submissionObject = {};
         for (const [date, text] of Object.entries(combinedObject)) {
+          // console.log("date : ", date);
+          // console.log("text : ", text);
           // Clean text:
           const cleanedText = text
             .split("\n") // Split into lines
@@ -63,12 +66,23 @@ fs.readdir(dataInputFolder, (err, files) => {
 
           const submissionArray = cleanedText.split("\n");
           const utcTimestamp = Math.floor(new Date(date).getTime() / 1000);
-          submissionObject.date = date;
-          submissionObject.date_utc = utcTimestamp;
-          submissionObject.submissions = submissionArray;
-          submissionOutput.push(submissionObject);
-        }
+          // Create a new submission object for each date
+          const submissionObject = {
+            date: date,
+            date_utc: utcTimestamp,
+            submissions: submissionArray,
+          };
 
+          console.log("submissionObject :", submissionObject);
+          submissionOutput.push(submissionObject);
+          // submissionObject.date = date;
+          // submissionObject.date_utc = utcTimestamp;
+          // submissionObject.submissions = submissionArray;
+          // console.log("submissionObject :", submissionObject);
+          // submissionOutput.push(submissionObject);
+          // console.log("submissionOutput : ", submissionOutput);
+        }
+        // console.log("submissionOutput : ", submissionOutput);
         // Generate output file names based on input file name
         const baseFileName = path.parse(file).name; // Extract file name without extension
         const jsonFilePath = path.join(outputFolder, `${baseFileName}.json`);
